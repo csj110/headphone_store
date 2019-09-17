@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../models/item_list.dart';
 
-import 'manager/base_info_manager.dart';
-import 'service_loactor.dart';
+import '../manager/base_info_manager.dart';
+import '../service_loactor.dart';
 
 List<Color> menuBackgroundColor = [Color(0xff335bd5), Color(0xff3d68f3)];
 Duration animationDuration = Duration(milliseconds: 250);
@@ -167,14 +168,19 @@ class HomeTop extends StatefulWidget {
 
 class _HomeTopState extends State<HomeTop> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    print(sl<BaseInfomanager>().homeIndex);
+    final screenWidth = MediaQuery.of(context).size.width;
     return AnimatedPositioned(
       top: sl<BaseInfomanager>().homeIndex == 1
           ? screenHeight * 0.15
           : screenHeight * 0.8,
-      height: screenHeight,
+      bottom: -screenHeight * 0.1,
       left: -1,
       right: 0,
       duration: animationDuration,
@@ -192,8 +198,7 @@ class _HomeTopState extends State<HomeTop> {
               child: GestureDetector(
                 onTap: () {
                   sl<BaseInfomanager>().setHomePart(1);
-                  setState(() {
-                  });
+                  setState(() {});
                 },
                 child: Center(
                   child: Row(
@@ -206,6 +211,101 @@ class _HomeTopState extends State<HomeTop> {
                   ),
                 ),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Headphones',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  Icon(
+                    Icons.more_horiz,
+                    color: Colors.white,
+                    size: 35.0,
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: PageView.builder(
+                controller:
+                    PageController(initialPage: 0, viewportFraction: 0.9),
+                itemCount: 3,
+                scrollDirection: Axis.horizontal,
+                pageSnapping: true,
+                itemBuilder: (context, index) {
+                  return Container(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        HeadPhoneItem(itemList[index]),
+                        2 * index + 1 > itemList.length
+                            ? null
+                            : HeadPhoneItem(itemList[index]),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Expanded(flex: 3, child: Placeholder()),
+            Padding(
+              padding: EdgeInsets.only(left: 12, top: 8, bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    width: 100,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color(0xfff8b502),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(
+                          Icons.home,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          'Home',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                        ),
+                        Icon(
+                          Icons.mail_outline,
+                          color: Colors.white,
+                        ),
+                        Icon(
+                          Icons.notifications_none,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: screenHeight * 0.1,
             )
           ],
         ),
@@ -268,6 +368,33 @@ class MenuItem extends StatelessWidget {
                   fontSize: 17,
                   fontWeight: FontWeight.w400)),
         ],
+      ),
+    );
+  }
+}
+
+class HeadPhoneItem extends StatelessWidget {
+  final ProudctItem item;
+  HeadPhoneItem(this.item);
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        width: 150,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 4,
+              child: Placeholder(),
+            ),
+            Expanded(
+              flex: 3,
+              child: Placeholder(),
+            ),
+          ],
+        ),
       ),
     );
   }

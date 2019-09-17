@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:headphone_store/service_loactor.dart';
 
-import 'menu_home.dart';
+import 'pages/menu_home.dart';
 
 void main() {
   setUpServiceLocator();
