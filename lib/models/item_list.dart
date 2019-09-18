@@ -7,6 +7,7 @@ class ProudctItem {
   final bool isLike;
   final List<String> features;
   final Color bgColor;
+  final List<String> colors;
 
   ProudctItem({
     this.path,
@@ -14,7 +15,8 @@ class ProudctItem {
     this.isLike,
     this.name,
     this.price,
-    this.bgColor
+    this.bgColor,
+    this.colors
   });
 }
 
@@ -22,7 +24,7 @@ List<ProudctItem> itemList = [
   ProudctItem(
     name: 'Bose Noise Cancelling Headphones 700',
     price: 399.95,
-    path: '',
+    path: 'assets/images/MHA22.png',
     features: [
       "Bose Noise Cancelling Headphones 700",
       "Audio-only cable (2.5 mm to 3.5 mm)",
@@ -30,13 +32,14 @@ List<ProudctItem> itemList = [
       "Owner's manual",
       "Protective hard case",
     ],
+    colors:['Midnight Black'],
     isLike: false,
     bgColor: Colors.white,
   ),
   ProudctItem(
     name: 'Beats Studio3 Wireless Over‑Ear Headphones - Blue',
     price: 349.95,
-    path: '',
+    path: 'assets/images/MUQ72.png',
     features: [
       "Beats Studio3 Wireless headphones",
       "Carrying case",
@@ -44,13 +47,14 @@ List<ProudctItem> itemList = [
       "Universal USB charging cable (USB-A to USB Micro-B)",
       "Quick Start Guide ",
     ],
+    colors: ['Midnight Black'],
     isLike: true,
     bgColor: Colors.red,
   ),
   ProudctItem(
     name: 'Beats Studio3 Wireless Headphones - NBA Collection - Lakers Purple',
     price: 349.95,
-    path: '',
+    path: 'assets/images/MV8T2.png',
     features: [
       "Form Factor: Over ear",
       "Connections: Bluetooth, Wireless",
@@ -58,13 +62,14 @@ List<ProudctItem> itemList = [
       "Power Source: Battery power",
       "Batteries: Rechargeable Lithium Ion",
     ],
+    colors: ['Club Red'],
     isLike: false,
     bgColor: Colors.purple,
   ),
   ProudctItem(
     name: 'Bose Noise Cancelling Headphones 700',
     price: 399.95,
-    path: '',
+    path: 'assets/images/MHA22.png',
     features: [
       "Bose Noise Cancelling Headphones 700",
       "Audio-only cable (2.5 mm to 3.5 mm)",
@@ -72,13 +77,14 @@ List<ProudctItem> itemList = [
       "Owner's manual",
       "Protective hard case",
     ],
+    colors:['Midnight Black'],
     isLike: false,
     bgColor: Colors.white,
   ),
   ProudctItem(
     name: 'Beats Studio3 Wireless Over‑Ear Headphones - Blue',
     price: 349.95,
-    path: '',
+    path: 'assets/images/MUQ72.png',
     features: [
       "Beats Studio3 Wireless headphones",
       "Carrying case",
@@ -86,13 +92,14 @@ List<ProudctItem> itemList = [
       "Universal USB charging cable (USB-A to USB Micro-B)",
       "Quick Start Guide ",
     ],
+    colors: ['Midnight Black'],
     isLike: true,
     bgColor: Colors.red,
   ),
   ProudctItem(
     name: 'Beats Studio3 Wireless Headphones - NBA Collection - Lakers Purple',
     price: 349.95,
-    path: '',
+    path: 'assets/images/MV8T2.png',
     features: [
       "Form Factor: Over ear",
       "Connections: Bluetooth, Wireless",
@@ -100,6 +107,7 @@ List<ProudctItem> itemList = [
       "Power Source: Battery power",
       "Batteries: Rechargeable Lithium Ion",
     ],
+    colors: ['Club Red'],
     isLike: false,
     bgColor: Colors.purple,
   ),

@@ -230,11 +230,11 @@ class _HomeTopState extends State<HomeTop> {
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 11,
               child: PageView.builder(
                 controller:
                     PageController(initialPage: 0, viewportFraction: 0.9),
-                itemCount: 3,
+                itemCount: (itemList.length / 2).round(),
                 scrollDirection: Axis.horizontal,
                 pageSnapping: true,
                 itemBuilder: (context, index) {
@@ -242,17 +242,65 @@ class _HomeTopState extends State<HomeTop> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        HeadPhoneItem(itemList[index]),
+                        HeadPhoneItem(itemList[2 * index]),
                         2 * index + 1 > itemList.length
                             ? null
-                            : HeadPhoneItem(itemList[index]),
+                            : HeadPhoneItem(itemList[2 * index + 1]),
                       ],
                     ),
                   );
                 },
               ),
             ),
-            Expanded(flex: 3, child: Placeholder()),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Earphones',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  Icon(
+                    Icons.more_horiz,
+                    color: Colors.white,
+                    size: 35.0,
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+                flex: 6,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (context, index) => Container(
+                          width: screenWidth * 0.7,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Material(
+                                elevation: 1,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                color: Colors.grey,
+                                child: Image.asset('assets/images.MHA22.png'),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('fsfsdfsf'),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Text('gsg')
+                                ],
+                              )
+                            ],
+                          ),
+                        ))),
             Padding(
               padding: EdgeInsets.only(left: 12, top: 8, bottom: 12),
               child: Row(
@@ -376,22 +424,52 @@ class MenuItem extends StatelessWidget {
 class HeadPhoneItem extends StatelessWidget {
   final ProudctItem item;
   HeadPhoneItem(this.item);
+
   @override
   Widget build(BuildContext context) {
+    Color _textColor =
+        item.bgColor == Colors.white ? Colors.black : Colors.white;
     return Card(
-      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
+        decoration: BoxDecoration(
+            color: item.bgColor, borderRadius: BorderRadius.circular(15.0)),
         width: 150,
         child: Column(
           children: <Widget>[
             Expanded(
               flex: 4,
-              child: Placeholder(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(item.path),
+              ),
             ),
             Expanded(
               flex: 3,
-              child: Placeholder(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text(
+                    'Beats Solo 3',
+                    style: TextStyle(
+                        color: _textColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    item.colors.first,
+                    style: TextStyle(
+                        color: _textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '\$ ${item.price}',
+                    style: TextStyle(
+                        color: _textColor, fontWeight: FontWeight.w500),
+                  )
+                ],
+              ),
             ),
           ],
         ),
