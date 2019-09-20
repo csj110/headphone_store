@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:headphone_store/pages/headphone_detail.dart';
 import '../models/item_list.dart';
 
 import '../manager/base_info_manager.dart';
 import '../service_loactor.dart';
+import 'dart:math' as math;
 
 List<Color> menuBackgroundColor = [Color(0xff335bd5), Color(0xff3d68f3)];
 Duration animationDuration = Duration(milliseconds: 250);
@@ -16,12 +18,19 @@ class _MenuHomeState extends State<MenuHome>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _scaleAnimation;
+  Animation<double> _rotateAnimation;
+  Animation<Offset> _positionAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: animationDuration);
     _scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
+    _rotateAnimation = Tween<double>(begin: 0.2, end: 0).animate(_controller);
+    _positionAnimation = Tween<Offset>(
+            begin: Offset.fromDirection(math.pi, 1.0),
+            end: Offset.fromDirection(0, 0))
+        .animate(_controller);
     sl<BaseInfomanager>().toggleMenu.listen((show) {
       if (show) {
         _controller.forward();
@@ -70,10 +79,7 @@ class _MenuHomeState extends State<MenuHome>
               scale: _scaleAnimation,
               child: Material(
                 elevation: 0,
-                animationDuration: animationDuration,
-                borderRadius: snapshot.data
-                    ? BorderRadius.all(Radius.elliptical(25, 35))
-                    : null,
+                color: Colors.transparent,
                 // clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: Stack(
                   overflow: Overflow.visible,
@@ -114,10 +120,13 @@ class _MenuHomeState extends State<MenuHome>
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: InkWell(
-                          child: Icon(
-                            Icons.close,
-                            size: 35.0,
-                            color: Colors.white,
+                          child: RotationTransition(
+                            turns: _rotateAnimation,
+                            child: Icon(
+                              Icons.close,
+                              size: 35.0,
+                              color: Colors.white,
+                            ),
                           ),
                           onTap: () {
                             sl<BaseInfomanager>().toggleMenu();
@@ -138,10 +147,13 @@ class _MenuHomeState extends State<MenuHome>
                   ],
                 ),
               ),
-              Container(
-                height: 300,
-                child: Column(
-                  children: createMenuItems(),
+              SlideTransition(
+                position: _positionAnimation,
+                child: Container(
+                  height: 300,
+                  child: Column(
+                    children: createMenuItems(),
+                  ),
                 ),
               ),
               Spacer(),
@@ -178,11 +190,13 @@ class _HomeTopState extends State<HomeTop> {
     final screenWidth = MediaQuery.of(context).size.width;
     return AnimatedPositioned(
       top: sl<BaseInfomanager>().homeIndex == 1
-          ? screenHeight * 0.15
-          : screenHeight * 0.8,
-      bottom: -screenHeight * 0.1,
-      left: -1,
-      right: 0,
+          ? sl<BaseInfomanager>().showMenu
+              ? screenHeight * 0.18
+              : screenHeight * 0.13
+          : screenHeight * 0.93,
+      height: screenHeight * 0.97,
+      left: sl<BaseInfomanager>().showMenu ? 40 : -1,
+      right: sl<BaseInfomanager>().showMenu ? -40 : 0,
       duration: animationDuration,
       curve: Curves.easeInBack,
       child: Container(
@@ -192,41 +206,64 @@ class _HomeTopState extends State<HomeTop> {
         ),
         child: Column(
           children: <Widget>[
-            Container(
-              height: 40,
-              width: 200,
-              child: GestureDetector(
-                onTap: () {
+            GestureDetector(
+              onVerticalDragUpdate: (DragUpdateDetails detail) {
+                if (sl<BaseInfomanager>().homeIndex == 1 &&
+                    detail.delta.dy > 0) {
                   sl<BaseInfomanager>().setHomePart(1);
                   setState(() {});
-                },
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.remove, color: Colors.white),
-                      Icon(Icons.remove, color: Colors.white),
-                      Icon(Icons.remove, color: Colors.white),
-                    ],
-                  ),
+                }
+                if (sl<BaseInfomanager>().homeIndex != 1 &&
+                    detail.delta.dy < 0) {
+                  sl<BaseInfomanager>().setHomePart(1);
+                  setState(() {});
+                }
+              },
+              onTap: () {
+                sl<BaseInfomanager>().setHomePart(1);
+                setState(() {});
+              },
+              child: Container(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.remove, color: Colors.white),
+                    Icon(Icons.remove, color: Colors.white),
+                    Icon(Icons.remove, color: Colors.white),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Headphones',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  ),
-                  Icon(
-                    Icons.more_horiz,
-                    color: Colors.white,
-                    size: 35.0,
-                  )
-                ],
+            GestureDetector(
+              onVerticalDragUpdate: (DragUpdateDetails detail) {
+                if (sl<BaseInfomanager>().homeIndex == 1 &&
+                    detail.delta.dy > 0) {
+                  sl<BaseInfomanager>().setHomePart(1);
+                  setState(() {});
+                }
+                if (sl<BaseInfomanager>().homeIndex != 1 &&
+                    detail.delta.dy < 0) {
+                  sl<BaseInfomanager>().setHomePart(1);
+                  setState(() {});
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Headphones',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    Icon(
+                      Icons.more_horiz,
+                      color: Colors.white,
+                      size: 35.0,
+                    )
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -275,15 +312,27 @@ class _HomeTopState extends State<HomeTop> {
                     scrollDirection: Axis.horizontal,
                     itemCount: 4,
                     itemBuilder: (context, index) => Container(
-                          width: screenWidth * 0.7,
+                          width: screenWidth * 0.65,
+                          padding: EdgeInsets.all(10.0),
+                          margin: EdgeInsets.symmetric(horizontal: 12.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.0)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Material(
-                                elevation: 1,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                color: Colors.grey,
-                                child: Image.asset('assets/images.MHA22.png'),
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/MUQ72.png',
+                                  width: 150,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                               SizedBox(
                                 width: 8.0,
@@ -291,11 +340,23 @@ class _HomeTopState extends State<HomeTop> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text('fsfsdfsf'),
                                   SizedBox(
-                                    height: 5.0,
+                                    height: 10.0,
                                   ),
-                                  Text('gsg')
+                                  Text(
+                                    'Tvory',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text(
+                                    '\$ 249.95',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  )
                                 ],
                               )
                             ],
@@ -362,10 +423,45 @@ class _HomeTopState extends State<HomeTop> {
   }
 }
 
-class HomeBottom extends StatelessWidget {
+class HomeBottom extends StatefulWidget {
+  @override
+  _HomeBottomState createState() => _HomeBottomState();
+}
+
+class _HomeBottomState extends State<HomeBottom>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _rotateAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _rotateAnimation = Tween<double>(begin: 0, end: 0.08).animate(_controller);
+    sl<BaseInfomanager>().setHomePart.listen((index) {
+      print(index);
+      print('from listen');
+      if (index != 0) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return AnimatedBuilder(
+      animation: _controller,
       child: Column(
         children: <Widget>[
           Padding(
@@ -392,6 +488,30 @@ class HomeBottom extends StatelessWidget {
           ),
         ],
       ),
+      builder: (BuildContext context, Widget child) {
+        return Transform(
+          alignment: Alignment.topCenter,
+          transform: Matrix4.identity() //生成一个单位矩阵
+            ..setEntry(3, 2, 0.006) // 透视
+            ..rotateX(sl<BaseInfomanager>().showMenu
+                ? _rotateAnimation.value * 0.5
+                : _rotateAnimation.value * 1.2)
+            ..translate(
+                0.0, sl<BaseInfomanager>().homeIndex == 0 ? 0.0 : 13.0, 0.0),
+          child: SafeArea(
+            child: Material(
+              color: Colors.white,
+              animationDuration: animationDuration,
+              borderRadius: sl<BaseInfomanager>().showMenu
+                  ? BorderRadius.circular(25)
+                  : sl<BaseInfomanager>().homeIndex != 0
+                      ? BorderRadius.circular(25)
+                      : null,
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -429,49 +549,58 @@ class HeadPhoneItem extends StatelessWidget {
   Widget build(BuildContext context) {
     Color _textColor =
         item.bgColor == Colors.white ? Colors.black : Colors.white;
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Container(
-        decoration: BoxDecoration(
-            color: item.bgColor, borderRadius: BorderRadius.circular(15.0)),
-        width: 150,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(item.path),
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(
+          builder: ((contex){
+            return HeadphoneDetail(item: item,);
+          })
+        ));
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          decoration: BoxDecoration(
+              color: item.bgColor, borderRadius: BorderRadius.circular(15.0)),
+          width: 150,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(item.path),
+                ),
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(
-                    'Beats Solo 3',
-                    style: TextStyle(
-                        color: _textColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    item.colors.first,
-                    style: TextStyle(
-                        color: _textColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '\$ ${item.price}',
-                    style: TextStyle(
-                        color: _textColor, fontWeight: FontWeight.w500),
-                  )
-                ],
+              Expanded(
+                flex: 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Text(
+                      'Beats Solo 3',
+                      style: TextStyle(
+                          color: _textColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      item.colors.first,
+                      style: TextStyle(
+                          color: _textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '\$ ${item.price}',
+                      style: TextStyle(
+                          color: _textColor, fontWeight: FontWeight.w500),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
