@@ -277,7 +277,7 @@ class _HomeTopState extends State<HomeTop> {
                 itemBuilder: (context, index) {
                   return Container(
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         HeadPhoneItem(itemList[2 * index]),
                         2 * index + 1 > itemList.length
@@ -441,6 +441,7 @@ class _HomeBottomState extends State<HomeBottom>
       vsync: this,
     );
     _rotateAnimation = Tween<double>(begin: 0, end: 0.08).animate(_controller);
+    _controller.forward();
     sl<BaseInfomanager>().setHomePart.listen((index) {
       print(index);
       print('from listen');
@@ -562,7 +563,7 @@ class HeadPhoneItem extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               color: item.bgColor, borderRadius: BorderRadius.circular(15.0)),
-          width: 150,
+          width: MediaQuery.of(context).size.width*0.4,
           child: Column(
             children: <Widget>[
               Expanded(

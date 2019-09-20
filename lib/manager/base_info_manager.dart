@@ -21,8 +21,9 @@ class BaseInfoManagerImpl implements BaseInfomanager {
     setHomePart = RxCommand.createSync((int index) {
       _homeIndex = _homeIndex == index ? 0 : index;
       return _homeIndex;
-    });
+    },emitInitialCommandResult: true);
   }
+
 
   @override
   List<dynamic> get menuItems => [
